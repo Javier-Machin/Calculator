@@ -1,0 +1,142 @@
+body {
+	width:100%;
+	text-align: center;
+	background-image: url("../images/notebookpaper1.jpg");
+}
+
+#calculatorBody {
+	width: 550px;
+	height: 700px;
+	margin: 70px auto;
+	border: 0 solid;
+	border-radius: 20px 20px 10px 10px;
+	background-image: url("../images/carbonF.jpg");
+	box-shadow: -8px 0px 14px;
+}
+
+#calculatorText {
+	display: inline-block;
+	margin-top: 25px;
+	width: 100%;
+	height: 70px;
+	color: white;
+	background-color: rgba(0,0,0,0.5);
+	border-top: 2px solid rgba(0,0,0,0.6);
+	border-bottom: 3px solid rgba(0,0,0,0.2);
+}
+
+#model {
+	display: inline-block;
+	position: relative;
+	font-size: 36px;
+	font-weight: bolder;
+	bottom: 20px;
+}
+
+#brand {
+	display: inline-block;
+	position: relative;
+	font-family: 'Pacifico';
+	font-size: 26px;
+	left: 20px;
+	bottom: 20px;
+}
+
+#calculatorDisplay {
+	display: inline-block;
+	width: 450px;
+	height: 75px;
+	border: 5px solid darkred;
+	border-radius: 15px 15px 5px 5px;
+	background-color: rgb(225,225,225);
+	margin-top: 30px;
+}
+
+#displayNumbers {
+	display: inline-block;
+	position: relative;
+	font-size: 35px;
+	bottom: 15px;
+}
+
+#displayOperation {
+	display: inline-block;
+	position: relative;
+	font-size: 35px;
+	float: right;
+	margin-right: 10px;
+	bottom: 15px;
+}
+
+#calculatorPad {
+	display: inline-block;
+	width: 450px;
+	margin-top: 50px;
+}
+
+#calculatorPad button {
+	border: 2px solid black;
+	border-radius: 10px;
+	font-size: 30px;
+	color: rgb(235,235,235);
+	background-color: darkred;
+}
+
+#numbersPad {
+	display: inline-grid;
+	grid-template-rows: repeat(4, 70px);
+	grid-template-columns: repeat(3, 110px);
+	float: left;
+}
+
+#button1, #button4, #button7, #button10 {
+	box-shadow: -1px 0px 2px black;
+}
+
+#operationsPad {
+	display: inline-block;
+	text-align: right;
+	float: right;
+	width: 120px;
+}
+
+#operationsPad button {
+	display:inline-block;
+	width: 110px;
+	height: 70px;
+	box-shadow: -2px 0px 2px black;
+}
+
+#logos {
+	width: 100%;
+	height: 100px;
+	margin-top: 20px;
+	overflow: hidden;
+	background-color: rgba(0,0,0,0.6);
+	border-bottom: 2px solid rgba(0,0,0,0.2);
+	border-top: 3px solid rgba(0,0,0,0.2);
+}
+
+#logos img {
+	transition: all 0.4s;
+	cursor: pointer;
+	opacity: 0.6;
+}
+
+#logos img:hover {
+	transform: scale(1.1);
+	opacity: 1;
+}
+
+footer a {
+	text-decoration: none;
+	font-family: 'Pacifico';
+	font-size: 26px;
+	color: darkblue;
+	transition: all 0.4s;
+}
+
+footer a:hover {
+	font-size: 30px;
+	color: blue;
+}
