@@ -50,6 +50,7 @@ body {
 	border-radius: 15px 15px 5px 5px;
 	background-color: rgb(225,225,225);
 	margin-top: 30px;
+	overflow: hidden;
 }
 
 #displayNumbers {
@@ -80,6 +81,7 @@ body {
 	font-size: 30px;
 	color: rgb(235,235,235);
 	background-color: darkred;
+	cursor: pointer;
 }
 
 #numbersPad {
@@ -129,11 +131,14 @@ body {
 }
 
 footer a {
+	display: inline-block;
+	position: relative;
 	text-decoration: none;
 	font-family: 'Pacifico';
 	font-size: 26px;
 	color: darkblue;
 	transition: all 0.4s;
+	bottom: 30px;
 }
 
 footer a:hover {

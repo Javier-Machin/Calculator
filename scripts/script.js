@@ -1,18 +1,91 @@
-let numbersPad = document.getElementById("numbersPad");
 
-for (let i = 12; i >= 1; i--) {
-	let newButton = document.createElement("button");
-	newButton.setAttribute('id', 'button' + (13 - i));
-	if (i - 3 >= 1) newButton.innerHTML = 13 - i;
-	numbersPad.append(newButton);
+let calculatorPad = document.getElementById("calculatorPad");
+let diplayNumbers = document.getElementById("displayNumbers");
+let numberOperations = 0;
+let number1;
+let number2;
+let currentOperation = "";
+let accumulated = 0;
+
+function addNumbers(value1, value2) {
+	return value1 + value2;
 }
 
-document.getElementById("button12").innerHTML = "=";
-document.getElementById("button11").innerHTML = "0";
-document.getElementById("button10").innerHTML = ",";
-
-for (let i = 1; i <= 3; i++) {
-	document.getElementById("button" + i).innerHTML = document.getElementById("button" + (i + 6)).innerHTML;
-	document.getElementById("button" + (i + 6)).innerHTML = i;
+function subtractNumbers(value1, value2) {
+	return value1 - value2;
 }
 
+function multiplyNumbers(value1, value2) {
+	return value1 * value2;
+}
+
+function divideNumbers(value1, value2) {
+	return value1 / value2;
+}
+
+function Operate(operation, value1, value2) {
+	return operation(value1, value2);
+}
+
+function buttonPressed(e) {
+	let button = e.target.innerHTML;
+	switch (button) {
+		case "+":
+		if (number1 == undefined) {
+			number1 = Number(accumulated);
+		} else if (number1 != undefined) {
+			number2 = Number(accumulated);
+		}
+		accumulated = 0;
+		currentOperation = addNumbers;
+		break;
+
+		case "-":
+		if (number1 == undefined) {
+			number1 = Number(accumulated);
+		} else if (number1 != undefined) {
+			number2 = Number(accumulated);
+		}
+		accumulated = 0;
+		currentOperation = subtractNumbers;
+		break;
+
+		case "x":
+		if (number1 == undefined) {
+			number1 = Number(accumulated);
+		} else if (number1 != undefined) {
+			number2 = Number(accumulated);
+		}
+		accumulated = 0;
+		currentOperation = multiplyNumbers;
+		break;
+
+		case "÷":
+		if (number1 == undefined) {
+			number1 = Number(accumulated);
+		} else if (number1 != undefined) {
+			number2 = Number(accumulated);
+		}
+		accumulated = 0;
+		currentOperation = divideNumbers;
+		break;
+
+		case "=":
+		if (number2 == undefined) { 
+			number2 = Number(accumulated);
+			accumulated = 0;
+		}	
+		displayNumbers.innerHTML = Operate(currentOperation, number1, number2);
+	}
+	if (Number(button) >= 0 && Number(button) <= 9) {
+		if (accumulated == 0) { 
+			accumulated = Number(e.target.innerHTML);
+		} else { 
+			accumulated += Number(e.target.innerHTML);
+		}
+	}
+}
+
+// for some reason it only operates one digit
+
+calculatorPad.addEventListener("click", buttonPressed);
