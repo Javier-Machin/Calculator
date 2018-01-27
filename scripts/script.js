@@ -1,11 +1,12 @@
 
 let calculatorPad = document.getElementById("calculatorPad");
 let diplayNumbers = document.getElementById("displayNumbers");
-let numberOperations = 0;
+let isOperation = RegExp("[^0-9^,]");
 let number1;
 let number2;
 let currentOperation = "";
-let accumulated = 0;
+let accumulated ="";
+let operationPositions = [];
 
 function addNumbers(value1, value2) {
 	return value1 + value2;
@@ -27,65 +28,28 @@ function Operate(operation, value1, value2) {
 	return operation(value1, value2);
 }
 
-function buttonPressed(e) {
-	let button = e.target.innerHTML;
-	switch (button) {
-		case "+":
-		if (number1 == undefined) {
-			number1 = Number(accumulated);
-		} else if (number1 != undefined) {
-			number2 = Number(accumulated);
+function checkStatus(string1) {
+	let numberOperations = 0;
+	let operationPositions = [];
+	for (let i = 0; i < string1.length; i++) {
+		let currentChar = string1.charAt(i);
+		if (isOperation.test(currentChar)) {
+			numberOperations++;
+			operationPositions.push(i);
 		}
-		accumulated = 0;
-		currentOperation = addNumbers;
-		break;
-
-		case "-":
-		if (number1 == undefined) {
-			number1 = Number(accumulated);
-		} else if (number1 != undefined) {
-			number2 = Number(accumulated);
-		}
-		accumulated = 0;
-		currentOperation = subtractNumbers;
-		break;
-
-		case "x":
-		if (number1 == undefined) {
-			number1 = Number(accumulated);
-		} else if (number1 != undefined) {
-			number2 = Number(accumulated);
-		}
-		accumulated = 0;
-		currentOperation = multiplyNumbers;
-		break;
-
-		case "÷":
-		if (number1 == undefined) {
-			number1 = Number(accumulated);
-		} else if (number1 != undefined) {
-			number2 = Number(accumulated);
-		}
-		accumulated = 0;
-		currentOperation = divideNumbers;
-		break;
-
-		case "=":
-		if (number2 == undefined) { 
-			number2 = Number(accumulated);
-			accumulated = 0;
-		}	
-		displayNumbers.innerHTML = Operate(currentOperation, number1, number2);
 	}
-	if (Number(button) >= 0 && Number(button) <= 9) {
-		if (accumulated == 0) { 
-			accumulated = Number(e.target.innerHTML);
-		} else { 
-			accumulated += Number(e.target.innerHTML);
-		}
+	if (numberOperations >= 2) {
+		number1 = Number(string1.slice(0, operationPositions[0]));
+		number2 = Number(string1.slice((operationPositions[0] + 1), operationPositions[1]));
+		console.log(number1 + " " + number2);
+		// we have the 2 numbers, now create function to pick operation
 	}
 }
 
-// for some reason it only operates one digit
+function buttonPressed(e) {
+	let button = e.target.innerHTML;
+	accumulated += button;
+	checkStatus(accumulated);
+}
 
 calculatorPad.addEventListener("click", buttonPressed);
