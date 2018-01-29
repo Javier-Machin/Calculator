@@ -60,15 +60,6 @@ body {
 	bottom: 15px;
 }
 
-#displayOperation {
-	display: inline-block;
-	position: relative;
-	font-size: 35px;
-	float: right;
-	margin-right: 10px;
-	bottom: 15px;
-}
-
 #calculatorPad {
 	display: inline-block;
 	width: 450px;
