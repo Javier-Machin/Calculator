@@ -1,11 +1,10 @@
 
 let calculatorPad = document.getElementById("calculatorPad");
 let diplayNumbers = document.getElementById("displayNumbers");
-let isOperation = RegExp("[^0-9^.]");
+let isOperation = RegExp("[^0-9^.]"); // Regular expression used to look for operator characters
 let number1;
 let number2;
-let accumulated = ""; //This is where all the inputs are stored, numbers and operators
-
+let accumulated = ""; // All the inputs are stored in this variable, numbers and operators
 let numberOperations = 0;
 let operatorCount = 0;
 
@@ -49,7 +48,7 @@ function selectOperation(operationPositions) {
 	}
 	return operation;
 }
-
+// Resets the app
 function clearAll() {
 	number1 = undefined;
 	number2 = undefined;
@@ -58,7 +57,7 @@ function clearAll() {
 	displayNumbers.innerHTML = 0;
 }
 
-//Save the inputs and prevents storing many operators, taking only the last one introduced.
+// Save the inputs and prevents storing many operators, taking only the last one introduced.
 function saveInput(button) {
 	if (isOperation.test(accumulated.charAt(accumulated.length - 1)) && isOperation.test(button)) {
 		if (accumulated.length > 1 || button == "-" || button == "+") {
@@ -69,20 +68,37 @@ function saveInput(button) {
 	}
 }
 
+// Checks the inputs for extra "dots" and remove all of them but the first
+function removeExtraDecimals(number) { 
+	let dotIndex;
+	number = number.split("");
+	for (let i = 0; i < number.length; i++) {
+		if (number[i] == "." && dotIndex == undefined) { 
+			dotIndex = i;
+		} else if (number[i] == "." && dotIndex != undefined) {
+			number[i] = "";
+		}
+	}	
+	number = number.join("");
+	return number;
+}
+// Splits the inputs to create to operable numbers, using the index of the operators to identify them
 function splitNumbers(operationPositions) {
+	let dotIndex;
 	number1 = accumulated.slice(0, operationPositions[0]);
 	number2 = accumulated.slice((operationPositions[0] + 1), operationPositions[1]);
 	if (number1.length > 20) number1 = number1.slice(0, 20);
 	if (number2.length > 20) number2 = number2.slice(0, 20);
+	number1 = removeExtraDecimals(number1);
+	number2 = removeExtraDecimals(number2);
 	if (!number1) number1 = 0;
 	if (!number2) number2 = 0;
 	number1 = Number(number1);
 	number2 = Number(number2);
 }
-
+// Raises a flag and prevents different operations that would cause the app to crash
 function invalidInput(button) {
 	let isInvalid = false;
-	let decimalCount = 0; // count how many decimals and invalid if more than one before operation // loop that check if previous char is operation and current char is, if yes , invalid
 	if (button == "C") { 
 		clearAll()
 		isInvalid = true;
@@ -103,13 +119,22 @@ function invalidInput(button) {
 	return isInvalid;  
 }
 
-
-function checkStatus(button) {
-	numberOperations = 0;
-	let operationPositions = [];
+// Updates the screen and sets the calculator ready for the next operation
+function updateState(operation) { 
+	let result = Operate(operation, number1, number2);
+	result = String(result);
+	if (result.length > 20) result = result.slice(0, 20);
+	displayNumbers.innerHTML = result  // update screen
+	accumulated = result;
+	number1 = Number(result);
+}
+// Checks if there is atleast 2 numbers and one operator 
+// and proceeds to call the function for the operation wanted
+function checkState(button) {
+	numberOperations = 0; // Keep track of the amount of operators inputted
+	let operationPositions = []; // Contents the Index for each operator in the string containing all the inputs
 	let previousChar;
 	displayNumbers.innerHTML = accumulated;
-
 	for (let i = 0; i < accumulated.length; i++) {
 		let currentChar = accumulated.charAt(i);
 		if (isOperation.test(currentChar) && i != 0 && (!isOperation.test(previousChar))) {
@@ -124,34 +149,29 @@ function checkStatus(button) {
 		}
 		previousChar = currentChar;
 	}
-
-	if (numberOperations >= 2|| accumulated.charAt(operationPositions[1]) == "=" && numberOperations > 0) {
-	
+	// If 2 operators or the equal button are saved, operates the numbers
+	if (numberOperations >= 2 || accumulated.charAt(operationPositions[1]) == "=" && numberOperations > 0) { 
 		splitNumbers(operationPositions);
-		
 		let operation = selectOperation(operationPositions);
-		
 		if (operation == divideNumbers && number2 == 0) { // check division by 0
 			alert("One does not simply divide by zero");
 			clearAll();
 			return;
 		}
-
-		displayNumbers.innerHTML = Operate(operation, number1, number2);  // update screen
-		number1 = displayNumbers.innerHTML; // use result as number1
-		if (number1 > Number.MAX_SAFE_INTEGER) number1 = Number.MAX_SAFE_INTEGER // if the number is too big reduce to max safe integer
-		number1 = Number(number1);
-		accumulated = String(number1);
+		updateState(operation);
 		numberOperations = 0;
 	}
 }
 
 function buttonPressed(e) {
 	let button = e.target.innerHTML;
+	if (accumulated.includes("e")) { // If the last result had an exponent, resets the app
+		clearAll();
+		return;
+	}
 	if (invalidInput(button)) return; //check if the input is valid
 	saveInput(button);
-	checkStatus(accumulated, button); //check if there is atleast 2 numbers and one operator 
-	                                  //and proceeds to call the function for the operation wanted
+	checkState(accumulated, button); 
 }
 
 calculatorPad.addEventListener("click", buttonPressed);
