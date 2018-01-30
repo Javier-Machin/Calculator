@@ -4,8 +4,8 @@ let diplayNumbers = document.getElementById("displayNumbers");
 let isOperation = RegExp("[^0-9^.]");
 let number1;
 let number2;
-let accumulated ="";
-let operationPositions = [];
+let accumulated = ""; //This is where all the inputs are stored, numbers and operators
+
 let numberOperations = 0;
 let operatorCount = 0;
 
@@ -46,9 +46,6 @@ function selectOperation(operationPositions) {
 		case "÷":
 		operation = divideNumbers;
 		break;
-		case "=":
-		operation = resultNumbers;
-		break;
 	}
 	return operation;
 }
@@ -61,34 +58,62 @@ function clearAll() {
 	displayNumbers.innerHTML = 0;
 }
 
-function removeRepeatedOps(button) {
+//Save the inputs and prevents storing many operators, taking only the last one introduced.
+function saveInput(button) {
 	if (isOperation.test(accumulated.charAt(accumulated.length - 1)) && isOperation.test(button)) {
-		accumulated = accumulated.slice(0, accumulated.length - 1) + button;
-	} else  if (button == "=" && numberOperations == 0) { 
-		return;
-	} else {
-	accumulated += button;
+		if (accumulated.length > 1 || button == "-" || button == "+") {
+			accumulated = accumulated.slice(0, accumulated.length - 1) + button;
+	}
+	} else { 
+		accumulated += button;
 	}
 }
 
+function splitNumbers(operationPositions) {
+	number1 = accumulated.slice(0, operationPositions[0]);
+	number2 = accumulated.slice((operationPositions[0] + 1), operationPositions[1]);
+	if (number1.length > 20) number1 = number1.slice(0, 20);
+	if (number2.length > 20) number2 = number2.slice(0, 20);
+	if (!number1) number1 = 0;
+	if (!number2) number2 = 0;
+	number1 = Number(number1);
+	number2 = Number(number2);
+}
+
+function invalidInput(button) {
+	let isInvalid = false;
+	let decimalCount = 0; // count how many decimals and invalid if more than one before operation // loop that check if previous char is operation and current char is, if yes , invalid
+	if (button == "C") { 
+		clearAll()
+		isInvalid = true;
+		return isInvalid; 
+	}
+	if (button == "=" && numberOperations == 0) { 
+		isInvalid = true;
+		return isInvalid; 
+	}
+	if (isOperation.test(button) && button != "-" && accumulated.length < 1) {
+		isInvalid = true;
+		return isInvalid; 
+	}
+	if (button == "." && accumulated.length < 1) {
+		isInvalid = true;
+		return isInvalid; 
+	}
+	return isInvalid;  
+}
+
+
 function checkStatus(button) {
-	operatorCount = 0;
 	numberOperations = 0;
 	let operationPositions = [];
 	let previousChar;
-	for (let i = 0; i < accumulated; i++) {
-		if (isOperation.test(accumulated.charAt(i))) {
-			operatorCount++;
-		}
-	}
-	if (accumulated.includes("=") && operatorCount <= 1) {
-		accumulated.replace("=", "");
-	}
 	displayNumbers.innerHTML = accumulated;
+
 	for (let i = 0; i < accumulated.length; i++) {
 		let currentChar = accumulated.charAt(i);
 		if (isOperation.test(currentChar) && i != 0 && (!isOperation.test(previousChar))) {
-			if (currentChar != "=") {
+			if (currentChar != "=" && currentChar != ".") {
 				numberOperations++;
 			}
 			if (!(operationPositions[0]) && currentChar != "=") {
@@ -99,37 +124,34 @@ function checkStatus(button) {
 		}
 		previousChar = currentChar;
 	}
+
 	if (numberOperations >= 2|| accumulated.charAt(operationPositions[1]) == "=" && numberOperations > 0) {
-		number1 = Number(accumulated.slice(0, operationPositions[0]));
-		number2 = Number(accumulated.slice((operationPositions[0] + 1), operationPositions[1]));
-		if (!number1) number1 = 0;
-		if (!number2) number2 = 0;
+	
+		splitNumbers(operationPositions);
+		
 		let operation = selectOperation(operationPositions);
-		if (operation == divideNumbers && number2 == 0) {
+		
+		if (operation == divideNumbers && number2 == 0) { // check division by 0
 			alert("One does not simply divide by zero");
 			clearAll();
 			return;
 		}
-		displayNumbers.innerHTML = Operate(operation, number1, number2);
-		number1 = Number(displayNumbers.innerHTML);
-		if (accumulated.charAt(operationPositions[1]) != "=") {
-			operationPositions[0] = operationPositions[1];
-			accumulated = String(number1 + accumulated.charAt(operationPositions[0]));
-		} else {
-			accumulated = String(number1);
-		}
-		if (accumulated.charAt(accumulated.length - 1) == "=") {
-			accumulated = accumulated.slice(0, accumulated.length);
-		}
-		// After clicking equal it allows the equal sign to be included in accumulated while it should not.
+
+		displayNumbers.innerHTML = Operate(operation, number1, number2);  // update screen
+		number1 = displayNumbers.innerHTML; // use result as number1
+		if (number1 > Number.MAX_SAFE_INTEGER) number1 = Number.MAX_SAFE_INTEGER // if the number is too big reduce to max safe integer
+		number1 = Number(number1);
+		accumulated = String(number1);
+		numberOperations = 0;
 	}
 }
 
 function buttonPressed(e) {
 	let button = e.target.innerHTML;
-	removeRepeatedOps(button);
-	checkStatus(accumulated, button);
-
+	if (invalidInput(button)) return; //check if the input is valid
+	saveInput(button);
+	checkStatus(accumulated, button); //check if there is atleast 2 numbers and one operator 
+	                                  //and proceeds to call the function for the operation wanted
 }
 
 calculatorPad.addEventListener("click", buttonPressed);
