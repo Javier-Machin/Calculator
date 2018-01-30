@@ -87,8 +87,8 @@ function splitNumbers(operationPositions) {
 	let dotIndex;
 	number1 = accumulated.slice(0, operationPositions[0]);
 	number2 = accumulated.slice((operationPositions[0] + 1), operationPositions[1]);
-	if (number1.length > 20) number1 = number1.slice(0, 20);
-	if (number2.length > 20) number2 = number2.slice(0, 20);
+	if (number1.length > 15) number1 = number1.slice(0, 15);
+	if (number2.length > 15) number2 = number2.slice(0, 15);
 	number1 = removeExtraDecimals(number1);
 	number2 = removeExtraDecimals(number2);
 	if (!number1) number1 = 0;
@@ -123,7 +123,7 @@ function invalidInput(button) {
 function updateState(operation) { 
 	let result = Operate(operation, number1, number2);
 	result = String(result);
-	if (result.length > 20) result = result.slice(0, 20);
+	if (result.length > 15) result = result.slice(0, 15);
 	displayNumbers.innerHTML = result  // update screen
 	accumulated = result;
 	number1 = Number(result);
