@@ -58,6 +58,7 @@ body {
 	position: relative;
 	font-size: 35px;
 	bottom: 15px;
+	height: 75px;
 }
 
 #calculatorPad {
