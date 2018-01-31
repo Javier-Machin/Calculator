@@ -8,6 +8,7 @@ No Javascript library is used.
 
 -------------------------------------------------------
 Calculadora sencilla hecha con CSS, HTML y JavaScript.
+-------------------------------------------------------
 
 Teclado de números hecho con CSS Grid.
 
