@@ -12,6 +12,6 @@ Calculadora sencilla hecha con CSS, HTML y JavaScript.
 
 Teclado de números hecho con CSS Grid.
 
-El código Javascript no usa librerias externas.
+El código Javascript no usa librerías externas.
 
 [Ver en el navegador](https://javier-machin.github.io/Calculator/)
